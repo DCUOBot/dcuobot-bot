@@ -1,0 +1,21 @@
+{
+  "name": "dcuobot-bot",
+  "version": "0.0.0",
+  "description": "DCUOBot NodeJS Discord bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DCUOBot/dcuobot-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/DCUOBot/dcuobot-bot/issues"
+  },
+  "homepage": "https://github.com/DCUOBot/dcuobot-bot#readme"
+}
