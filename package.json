@@ -2,9 +2,18 @@
   "name": "dcuobot-bot",
   "version": "0.0.0",
   "description": "DCUOBot NodeJS Discord bot",
-  "main": "index.js",
+  "engines": {
+    "node": ">=24"
+  },
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "node --env-file=.env dist/index.js",
+    "dev": "tsx --env-file=.env watch src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "deploy-commands": "tsx --env-file=.env src/deploy-commands.ts"
   },
   "repository": {
     "type": "git",
@@ -17,5 +26,12 @@
   "bugs": {
     "url": "https://github.com/DCUOBot/dcuobot-bot/issues"
   },
-  "homepage": "https://github.com/DCUOBot/dcuobot-bot#readme"
+  "homepage": "https://github.com/DCUOBot/dcuobot-bot#readme",
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "@vitest/coverage-v8": "^5.0.0",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  }
 }
