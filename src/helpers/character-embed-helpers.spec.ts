@@ -64,7 +64,9 @@ const buildCharacter = (overrides: Partial<Character> = {}): Character => ({
 });
 
 const buildClient = (emojis: Record<string, string> = {}): Client => {
-  const cache = new Map(Object.entries(emojis).map(([id, mention]) => [id, { toString: () => mention }]));
+  const cache = new Map(
+    Object.entries(emojis).map(([id, mention]) => [id, { toString: () => mention }]),
+  );
 
   return { emojis: { cache } } as unknown as Client;
 };
@@ -174,7 +176,9 @@ describe('buildCharacterEmbed', () => {
 
     const fields = buildCharacterEmbed(client, character).toJSON().fields ?? [];
 
-    expect(findField(fields, ':amphora: Artifact One').value).toBe('<:soulofzamaraan:111> Soul of Zamaraan');
+    expect(findField(fields, ':amphora: Artifact One').value).toBe(
+      '<:soulofzamaraan:111> Soul of Zamaraan',
+    );
   });
 
   it('renders just the artifact name when its emoji is not cached on the client', () => {

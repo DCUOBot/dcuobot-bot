@@ -44,9 +44,10 @@ client.on(Events.InteractionCreate, (interaction) => {
       flags: MessageFlags.Ephemeral,
     } as const;
 
-    const respond = interaction.replied || interaction.deferred
-      ? interaction.followUp(errorResponse)
-      : interaction.reply(errorResponse);
+    const respond =
+      interaction.replied || interaction.deferred
+        ? interaction.followUp(errorResponse)
+        : interaction.reply(errorResponse);
 
     respond.catch((followUpError: unknown) => {
       logger.error({ err: followUpError }, 'Failed to send error response');

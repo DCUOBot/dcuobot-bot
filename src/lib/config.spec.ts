@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 
 vi.mock('./logger', () => ({
   logger: { fatal: vi.fn() },
@@ -6,7 +6,7 @@ vi.mock('./logger', () => ({
 
 describe('config', () => {
   const originalDiscordToken = process.env.DISCORD_TOKEN;
-  let exitSpy: ReturnType<typeof vi.spyOn>;
+  let exitSpy: MockInstance<typeof process.exit>;
 
   beforeEach(() => {
     vi.resetModules();
