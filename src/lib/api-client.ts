@@ -2,6 +2,10 @@ import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig } from '
 import { config } from './config';
 import type { Character } from '../models/characters/character';
 
+interface ApiErrorResponseBody {
+  message?: string;
+}
+
 export class ApiError extends Error {
   readonly status: number;
 
@@ -26,7 +30,8 @@ export class ApiClient {
     } catch (error) {
       if (error instanceof AxiosError) {
         const status = error.response?.status ?? 0;
-        throw new ApiError(error.response?.data?.message ?? 'An error occurred, please try again later.', status);
+        const body = error.response?.data as ApiErrorResponseBody | undefined;
+        throw new ApiError(body?.message ?? 'An error occurred, please try again later.', status);
       }
 
       throw error;

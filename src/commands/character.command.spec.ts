@@ -58,7 +58,10 @@ const buildCharacter = (overrides: Partial<Character> = {}): Character => ({
   ...overrides,
 });
 
-const createInteraction = (options: { name: string; server: string }): ChatInputCommandInteraction => {
+const createInteraction = (options: {
+  name: string;
+  server: string;
+}): ChatInputCommandInteraction => {
   const getString = vi.fn((optionName: string) => {
     if (optionName === 'name') return options.name;
     if (optionName === 'server') return options.server;
@@ -124,7 +127,7 @@ describe('character command', () => {
     await command.execute(interaction);
 
     expect(interaction.editReply).toHaveBeenCalledWith({
-      content: expect.stringContaining('batman') as unknown as string,
+      content: expect.stringContaining('batman'),
       embeds: [mockEmbed],
     });
   });

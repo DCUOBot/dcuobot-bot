@@ -18,10 +18,7 @@ const command: Command = {
         .setRequired(true),
     )
     .addStringOption((option) =>
-      option
-        .setName('server')
-        .setDescription('The server the character is on.')
-        .setRequired(true),
+      option.setName('server').setDescription('The server the character is on.').setRequired(true),
     ),
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {

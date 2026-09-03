@@ -6,9 +6,7 @@ import type {
 } from 'discord.js';
 
 export type CommandData =
-  | SlashCommandBuilder
-  | SlashCommandOptionsOnlyBuilder
-  | SlashCommandSubcommandsOnlyBuilder;
+  SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
 
 export interface Command {
   readonly data: CommandData;

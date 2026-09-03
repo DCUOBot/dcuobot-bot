@@ -30,7 +30,9 @@ describe('loadCommands', () => {
   it('skips a module whose default export has no execute function, and warns', async () => {
     const commands = await loadCommands(fixturesDir);
 
-    expect(commands.some((command) => (command.data as { name: string }).name === 'missing-execute')).toBe(false);
+    expect(
+      commands.some((command) => (command.data as { name: string }).name === 'missing-execute'),
+    ).toBe(false);
     expect(logger.warn).toHaveBeenCalledWith(
       { file: 'missing-execute.command.ts' },
       'Skipped invalid command module: missing data/execute',
@@ -40,9 +42,11 @@ describe('loadCommands', () => {
   it('skips a module whose execute export is not a function, and warns', async () => {
     const commands = await loadCommands(fixturesDir);
 
-    expect(commands.some((command) => (command.data as { name: string }).name === 'execute-not-function')).toBe(
-      false,
-    );
+    expect(
+      commands.some(
+        (command) => (command.data as { name: string }).name === 'execute-not-function',
+      ),
+    ).toBe(false);
     expect(logger.warn).toHaveBeenCalledWith(
       { file: 'execute-not-function.command.ts' },
       'Skipped invalid command module: missing data/execute',
@@ -63,8 +67,14 @@ describe('loadCommands', () => {
     const commands = await loadCommands(fixturesDir);
 
     expect(commands).toHaveLength(2);
-    expect(logger.warn).not.toHaveBeenCalledWith({ file: 'declaration.d.ts' }, expect.anything() as unknown);
-    expect(logger.warn).not.toHaveBeenCalledWith({ file: 'README.md' }, expect.anything() as unknown);
+    expect(logger.warn).not.toHaveBeenCalledWith(
+      { file: 'declaration.d.ts' },
+      expect.anything() as unknown,
+    );
+    expect(logger.warn).not.toHaveBeenCalledWith(
+      { file: 'README.md' },
+      expect.anything() as unknown,
+    );
   });
 
   it('returns an empty array for a directory with no command files', async () => {

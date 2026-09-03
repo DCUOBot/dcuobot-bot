@@ -1,5 +1,5 @@
 import { Events, GatewayIntentBits, MessageFlags } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 
 const { mockClientInstance, MockBotClient } = vi.hoisted(() => {
   const mockClientInstance = {
@@ -33,7 +33,10 @@ vi.mock('./lib/logger', () => ({
 
 type FakeCommand = { data: { name: string }; execute: ReturnType<typeof vi.fn> };
 
-const buildCommand = (name: string, execute = vi.fn().mockResolvedValue(undefined)): FakeCommand => ({
+const buildCommand = (
+  name: string,
+  execute = vi.fn().mockResolvedValue(undefined),
+): FakeCommand => ({
   data: { name },
   execute,
 });
@@ -70,9 +73,9 @@ const runIndex = async (commands: FakeCommand[] = []) => {
 };
 
 const getOnceHandler = (event: string) =>
-  mockClientInstance.once.mock.calls.find(([registeredEvent]) => registeredEvent === event)?.[1] as (
-    ...args: unknown[]
-  ) => void;
+  mockClientInstance.once.mock.calls.find(
+    ([registeredEvent]) => registeredEvent === event,
+  )?.[1] as (...args: unknown[]) => void;
 
 const getOnHandler = (event: string) =>
   mockClientInstance.on.mock.calls.find(([registeredEvent]) => registeredEvent === event)?.[1] as (
@@ -80,7 +83,7 @@ const getOnHandler = (event: string) =>
   ) => void;
 
 describe('index', () => {
-  let processOnSpy: ReturnType<typeof vi.spyOn>;
+  let processOnSpy: MockInstance<typeof process.on>;
 
   beforeEach(() => {
     vi.resetModules();
@@ -108,15 +111,22 @@ describe('index', () => {
     const { logger } = await runIndex();
 
     const calls = processOnSpy.mock.calls as [string, (...args: unknown[]) => void][];
-    const uncaughtHandler = calls.find((call) => call[0] === 'uncaughtException')?.[1] as (error: Error) => void;
-    const rejectionHandler = calls.find((call) => call[0] === 'unhandledRejection')?.[1] as (reason: unknown) => void;
+    const uncaughtHandler = calls.find((call) => call[0] === 'uncaughtException')?.[1] as (
+      error: Error,
+    ) => void;
+    const rejectionHandler = calls.find((call) => call[0] === 'unhandledRejection')?.[1] as (
+      reason: unknown,
+    ) => void;
 
     const error = new Error('boom');
     uncaughtHandler(error);
     expect(logger.error).toHaveBeenCalledWith({ err: error }, 'Uncaught exception');
 
     rejectionHandler('some reason');
-    expect(logger.error).toHaveBeenCalledWith({ err: 'some reason' }, 'Unhandled promise rejection');
+    expect(logger.error).toHaveBeenCalledWith(
+      { err: 'some reason' },
+      'Unhandled promise rejection',
+    );
   });
 
   it('loads commands, registers them by name, and logs the count', async () => {
@@ -167,7 +177,10 @@ describe('index', () => {
       handler(interaction);
       await flush();
 
-      expect(logger.warn).toHaveBeenCalledWith({ commandName: 'nonexistent' }, 'Unknown command received');
+      expect(logger.warn).toHaveBeenCalledWith(
+        { commandName: 'nonexistent' },
+        'Unknown command received',
+      );
     });
 
     it('executes the matched command', async () => {
@@ -190,7 +203,11 @@ describe('index', () => {
       const { logger } = await runIndex([command]);
       const handler = getOnHandler(Events.InteractionCreate);
 
-      const interaction = buildInteraction({ commandName: 'character', replied: false, deferred: false });
+      const interaction = buildInteraction({
+        commandName: 'character',
+        replied: false,
+        deferred: false,
+      });
       handler(interaction);
       await flush();
 
@@ -206,7 +223,10 @@ describe('index', () => {
     });
 
     it('follows up instead of replying when the interaction was already replied or deferred', async () => {
-      const command = buildCommand('character', vi.fn().mockRejectedValue(new Error('command exploded')));
+      const command = buildCommand(
+        'character',
+        vi.fn().mockRejectedValue(new Error('command exploded')),
+      );
       await runIndex([command]);
       const handler = getOnHandler(Events.InteractionCreate);
 
@@ -222,7 +242,10 @@ describe('index', () => {
     });
 
     it('logs a second error when sending the error response itself fails', async () => {
-      const command = buildCommand('character', vi.fn().mockRejectedValue(new Error('command exploded')));
+      const command = buildCommand(
+        'character',
+        vi.fn().mockRejectedValue(new Error('command exploded')),
+      );
       const { logger } = await runIndex([command]);
       const handler = getOnHandler(Events.InteractionCreate);
 
@@ -236,7 +259,10 @@ describe('index', () => {
       handler(interaction);
       await flush();
 
-      expect(logger.error).toHaveBeenCalledWith({ err: followUpError }, 'Failed to send error response');
+      expect(logger.error).toHaveBeenCalledWith(
+        { err: followUpError },
+        'Failed to send error response',
+      );
     });
   });
 });

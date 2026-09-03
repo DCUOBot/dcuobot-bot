@@ -32,7 +32,13 @@ vi.mock('./config', () => ({
 const singletonCreateCall = mockCreate.mock.calls.at(-1);
 
 const buildAxiosError = (response?: Partial<AxiosResponse>): AxiosError =>
-  new AxiosError('Request failed', 'ERR_BAD_REQUEST', undefined, undefined, response as AxiosResponse | undefined);
+  new AxiosError(
+    'Request failed',
+    'ERR_BAD_REQUEST',
+    undefined,
+    undefined,
+    response as AxiosResponse | undefined,
+  );
 
 describe('ApiClient', () => {
   beforeEach(() => {
@@ -71,7 +77,10 @@ describe('ApiClient', () => {
 
     it('wraps an AxiosError with a response into an ApiError using the response status and message', async () => {
       mockRequest.mockRejectedValue(
-        buildAxiosError({ status: 404, data: { message: 'Character not found.' } } as AxiosResponse),
+        buildAxiosError({
+          status: 404,
+          data: { message: 'Character not found.' },
+        } as AxiosResponse),
       );
 
       const client = new ApiClient('https://mocked.example/api');
