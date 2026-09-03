@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "module": "esnext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "target": "esnext",
-    "types": [],
+    "types": ["node"],
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
@@ -17,7 +18,6 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
   "include": [
