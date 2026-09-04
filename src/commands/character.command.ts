@@ -1,5 +1,5 @@
 import { apiClient } from '../lib/api-client';
-import { buildCharacterEmbed } from '../helpers/character-embed-helpers';
+import { buildCharacterEmbed } from '../helpers/character/character-embed-helpers';
 import { buildLookupCommand } from '../handlers/build-lookup-command';
 
 const isExactMatch = (characterName: string, query: string): boolean =>

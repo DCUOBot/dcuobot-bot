@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import command from './character.command';
 import { apiClient, ApiError } from '../lib/api-client';
-import { buildCharacterEmbed } from '../helpers/character-embed-helpers';
+import { buildCharacterEmbed } from '../helpers/character/character-embed-helpers';
 import type { Character } from '../models/characters/character';
 
 vi.mock('../lib/api-client', () => {
@@ -22,7 +22,7 @@ vi.mock('../lib/api-client', () => {
   };
 });
 
-vi.mock('../helpers/character-embed-helpers', () => ({
+vi.mock('../helpers/character/character-embed-helpers', () => ({
   buildCharacterEmbed: vi.fn(),
 }));
 

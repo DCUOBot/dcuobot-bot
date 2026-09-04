@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatInputCommandInteraction, EmbedBuilder, ActionRowBuilder } from 'discord.js';
 import command from './lfg.command';
-import { buildLfgActionRow, buildLfgEmbed } from '../helpers/lfg-embed-helpers';
+import { buildLfgActionRow, buildLfgEmbed } from '../helpers/lfg/lfg-embed-helpers';
 
 const EMOJIS = vi.hoisted(() => ({
   tank: '<:r_:1088024461778890772>',
@@ -18,7 +18,7 @@ vi.mock('../lib/config', () => ({
   },
 }));
 
-vi.mock('../helpers/lfg-embed-helpers', () => ({
+vi.mock('../helpers/lfg/lfg-embed-helpers', () => ({
   buildLfgEmbed: vi.fn(),
   buildLfgActionRow: vi.fn(),
   EMPTY_SLOT: '-',

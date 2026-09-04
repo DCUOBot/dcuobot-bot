@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { buildServersEmbed } from './servers-embed-helpers';
-import type { GameServer } from '../models/game-servers/game-server';
+import type { GameServer } from '../../models/game-servers/game-server';
 
-vi.mock('../lib/config', () => ({
+vi.mock('../../lib/config', () => ({
   config: {
     frontendUrl: 'https://dcuo.bot',
     discord: {

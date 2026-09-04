@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ButtonStyle } from 'discord.js';
 import { buildLfgActionRow, buildLfgEmbed, type LfgRole } from './lfg-embed-helpers';
 
-vi.mock('../lib/config', () => ({
+vi.mock('../../lib/config', () => ({
   config: {
     frontendUrl: 'https://dcuo.bot',
     discord: {

@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { buildTopLeaguesEmbed, buildTopLeaguesUrl } from './top-leagues-embed-helpers';
-import type { Guild } from '../models/guilds/guild';
+import type { Guild } from '../../models/guilds/guild';
 
-vi.mock('../lib/config', () => ({
+vi.mock('../../lib/config', () => ({
   config: {
     frontendUrl: 'https://dcuo.bot',
     discord: {

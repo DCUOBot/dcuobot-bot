@@ -1,5 +1,5 @@
 import { apiClient } from '../lib/api-client';
-import { buildGuildEmbed } from '../helpers/guild-embed-helpers';
+import { buildGuildEmbed } from '../helpers/guild/guild-embed-helpers';
 import { buildLookupCommand } from '../handlers/build-lookup-command';
 
 const command = buildLookupCommand({

@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { buildTopCharactersEmbed, buildTopCharactersUrl } from './top-characters-embed-helpers';
-import type { Character } from '../models/characters/character';
+import type { Character } from '../../models/characters/character';
 
-vi.mock('../lib/config', () => ({
+vi.mock('../../lib/config', () => ({
   config: {
     frontendUrl: 'https://dcuo.bot',
     discord: {

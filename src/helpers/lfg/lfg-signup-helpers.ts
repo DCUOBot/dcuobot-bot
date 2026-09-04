@@ -1,5 +1,5 @@
 import { type ButtonInteraction, MessageFlags } from 'discord.js';
-import { buildEmbed } from './embed-helpers';
+import { buildEmbed } from '../embed-helpers';
 import {
   buildLfgRoleFields,
   countFilledSlots,

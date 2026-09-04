@@ -1,6 +1,6 @@
 import type { ButtonInteraction } from 'discord.js';
 import type { Button } from '../types/button';
-import { handleLfgSignup } from '../helpers/lfg-signup-helpers';
+import { handleLfgSignup } from '../helpers/lfg/lfg-signup-helpers';
 
 const button: Button = {
   customId: 'controller',

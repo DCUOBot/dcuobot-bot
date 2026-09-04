@@ -1,16 +1,18 @@
 import type { Command } from '../types/command';
 import { type ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { getSystemInfo } from '../helpers/info/system-info-helpers';
-import { buildInfoEmbed } from '../helpers/info/info-embed-helpers';
+import type { BotClient } from '../structures/bot-client';
+import { buildCommandsEmbed } from '../helpers/commands-embed-helpers';
 
 const command: Command = {
-  data: new SlashCommandBuilder().setName('info').setDescription('Information about DCUOBot.'),
+  data: new SlashCommandBuilder()
+    .setName('dcuobot')
+    .setDescription('See a list of available commands.'),
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
     await interaction.deferReply();
 
-    const systemInfo = getSystemInfo(interaction.client);
-    const embed = buildInfoEmbed(systemInfo);
+    const { commands } = interaction.client as BotClient;
+    const embed = buildCommandsEmbed([...commands.values()]);
 
     await interaction.editReply({
       embeds: [embed],

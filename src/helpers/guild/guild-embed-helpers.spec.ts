@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { buildGuildEmbed, buildGuildImageUrl, buildGuildUrl } from './guild-embed-helpers';
-import type { Guild } from '../models/guilds/guild';
-import type { GuildCharacter } from '../models/guilds/guild-character';
+import type { Guild } from '../../models/guilds/guild';
+import type { GuildCharacter } from '../../models/guilds/guild-character';
 
-vi.mock('../lib/config', () => ({
+vi.mock('../../lib/config', () => ({
   config: {
     frontendUrl: 'https://dcuo.bot',
     discord: {

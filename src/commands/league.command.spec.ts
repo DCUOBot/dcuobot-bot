@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import command from './league.command';
 import { apiClient, ApiError } from '../lib/api-client';
-import { buildGuildEmbed } from '../helpers/guild-embed-helpers';
+import { buildGuildEmbed } from '../helpers/guild/guild-embed-helpers';
 import type { Guild } from '../models/guilds/guild';
 
 vi.mock('../lib/api-client', () => {
@@ -22,7 +22,7 @@ vi.mock('../lib/api-client', () => {
   };
 });
 
-vi.mock('../helpers/guild-embed-helpers', () => ({
+vi.mock('../helpers/guild/guild-embed-helpers', () => ({
   buildGuildEmbed: vi.fn(),
 }));
 

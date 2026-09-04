@@ -1,5 +1,5 @@
-import type { GameServer } from '../models/game-servers/game-server';
-import { buildEmbed } from './embed-helpers';
+import type { GameServer } from '../../models/game-servers/game-server';
+import { buildEmbed } from '../embed-helpers';
 import type { EmbedBuilder } from 'discord.js';
 
 const getServerName = (server: GameServer): string => {

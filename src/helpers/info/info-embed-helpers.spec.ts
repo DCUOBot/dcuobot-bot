@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { buildInfoEmbed } from './info-embed-helpers';
 import type { SystemInfo } from './system-info-helpers';
 
-vi.mock('../lib/config', () => ({
+vi.mock('../../lib/config', () => ({
   config: {
     frontendUrl: 'https://dcuo.bot',
     discord: {
