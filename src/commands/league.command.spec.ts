@@ -87,7 +87,7 @@ describe('league command', () => {
     expect(interaction.deferReply).toHaveBeenCalledOnce();
     expect(apiClient.getGuild).toHaveBeenCalledWith('Justice League', 2);
     expect(buildGuildEmbed).toHaveBeenCalledWith(guild);
-    expect(interaction.editReply).toHaveBeenCalledWith({ embeds: [mockEmbed] });
+    expect(interaction.editReply).toHaveBeenCalledWith({ content: null, embeds: [mockEmbed] });
   });
 
   it('resolves the server option to the matching world ID', async () => {
