@@ -2,6 +2,7 @@ import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig } from '
 import { config } from './config';
 import type { Character } from '../models/characters/character';
 import type { Guild } from '../models/guilds/guild';
+import type { GameServer } from '../models/game-servers/game-server';
 
 interface ApiErrorResponseBody {
   message?: string;
@@ -74,6 +75,10 @@ export class ApiClient {
         sortDirection: 'DESC',
       },
     });
+  }
+
+  async getGameServerStatus(): Promise<GameServer[]> {
+    return this.request<GameServer[]>('/status/game-servers');
   }
 }
 
