@@ -2,10 +2,25 @@ import { describe, expect, it } from 'vitest';
 import {
   getApiSortByBotSort,
   getCharacterStatBySort,
+  getGuildStatBySort,
   getSortEmoji,
   getSortLabel,
 } from './sort-helpers';
 import type { Character } from '../models/characters/character';
+import type { Guild } from '../models/guilds/guild';
+
+const buildGuild = (overrides: Partial<Guild> = {}): Guild => ({
+  guild_id: '1',
+  name: 'Justice League',
+  world_id: '2',
+  alignment: 'Hero',
+  average_skill_points: 250,
+  average_combat_rating: 400,
+  average_pvp_combat_rating: 380,
+  member_count: 12,
+  characters: [],
+  ...overrides,
+});
 
 const buildCharacter = (overrides: Partial<Character> = {}): Character => ({
   character_id: '1',
@@ -44,6 +59,10 @@ describe('getApiSortByBotSort', () => {
     ['pvpcr', 'pvp_combat_rating'],
     ['health', 'max_health'],
     ['power', 'max_power'],
+    ['avgsp', 'averageSkillPoints'],
+    ['avgcr', 'averageCombatRating'],
+    ['avgpvpcr', 'averagePvpCombatRating'],
+    ['members', 'memberCount'],
   ])('maps bot sort "%s" to API sort "%s"', (sort, apiSort) => {
     expect(getApiSortByBotSort(sort)).toBe(apiSort);
   });
@@ -71,6 +90,10 @@ describe('getSortEmoji', () => {
     ['restoration', ':herb:'],
     ['vitalization', ':pill:'],
     ['dominance', ':chains:'],
+    ['avgsp', ':chart_with_upwards_trend:'],
+    ['avgcr', ':dagger:'],
+    ['avgpvpcr', ':crossed_swords:'],
+    ['members', ':1234:'],
   ])('maps sort "%s" to emoji "%s"', (sort, emoji) => {
     expect(getSortEmoji(sort)).toBe(emoji);
   });
@@ -98,6 +121,10 @@ describe('getSortLabel', () => {
     ['restoration', 'Restoration'],
     ['vitalization', 'Vitalization'],
     ['dominance', 'Dominance'],
+    ['avgsp', 'Avg. Skill Points'],
+    ['avgcr', 'Avg. Combat Rating'],
+    ['avgpvpcr', 'Avg. PvP Combat Rating'],
+    ['members', 'Members'],
   ])('maps sort "%s" to label "%s"', (sort, label) => {
     expect(getSortLabel(sort)).toBe(label);
   });
@@ -166,5 +193,45 @@ describe('getCharacterStatBySort', () => {
     const character = buildCharacter();
 
     expect(() => getCharacterStatBySort('bogus', character)).toThrow('Invalid sort.');
+  });
+});
+
+describe('getGuildStatBySort', () => {
+  it('reads the matching average/count field for each guild sort', () => {
+    const guild = buildGuild({
+      average_skill_points: 250,
+      average_combat_rating: 400,
+      average_pvp_combat_rating: 380,
+      member_count: 12,
+    });
+
+    expect(getGuildStatBySort('avgsp', guild)).toBe(250);
+    expect(getGuildStatBySort('avgcr', guild)).toBe(400);
+    expect(getGuildStatBySort('avgpvpcr', guild)).toBe(380);
+    expect(getGuildStatBySort('members', guild)).toBe(12);
+  });
+
+  it('returns a legitimate zero value instead of throwing', () => {
+    const guild = buildGuild({ member_count: 0 });
+
+    expect(getGuildStatBySort('members', guild)).toBe(0);
+  });
+
+  it('is case-insensitive', () => {
+    const guild = buildGuild({ average_combat_rating: 400 });
+
+    expect(getGuildStatBySort('AVGCR', guild)).toBe(400);
+  });
+
+  it('throws for an unknown sort', () => {
+    const guild = buildGuild();
+
+    expect(() => getGuildStatBySort('bogus', guild)).toThrow('Invalid sort.');
+  });
+
+  it('throws for a character-only sort', () => {
+    const guild = buildGuild();
+
+    expect(() => getGuildStatBySort('sp', guild)).toThrow('Invalid sort.');
   });
 });
