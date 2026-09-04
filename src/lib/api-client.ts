@@ -56,6 +56,15 @@ export class ApiClient {
       },
     });
   }
+
+  async getCharactersRanking(worldId: number, sort: string): Promise<Character[]> {
+    return this.request<Character[]>('/characters', {
+      params: {
+        worldId,
+        sort,
+      },
+    });
+  }
 }
 
 export const apiClient = new ApiClient();

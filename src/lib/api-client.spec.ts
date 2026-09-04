@@ -191,6 +191,76 @@ describe('ApiClient', () => {
       await expect(client.getGuild('Justice League', 2)).rejects.not.toBeInstanceOf(ApiError);
     });
   });
+
+  describe('getCharactersRanking', () => {
+    it('requests /characters with the worldId and sort as params, and returns the response data', async () => {
+      const characters = [{ character_id: '1', name: 'Batman' }];
+      mockRequest.mockResolvedValue({ data: characters });
+
+      const client = new ApiClient('https://mocked.example/api');
+      const result = await client.getCharactersRanking(2, 'skill_points');
+
+      expect(mockRequest).toHaveBeenCalledWith({
+        url: '/characters',
+        params: { worldId: 2, sort: 'skill_points' },
+      });
+      expect(result).toBe(characters);
+    });
+
+    it('wraps an AxiosError with a response into an ApiError using the response status and message', async () => {
+      mockRequest.mockRejectedValue(
+        buildAxiosError({
+          status: 500,
+          data: { message: 'Ranking unavailable.' },
+        } as AxiosResponse),
+      );
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getCharactersRanking(2, 'skill_points')).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'Ranking unavailable.',
+        status: 500,
+      });
+    });
+
+    it('falls back to a generic message when the error response has no body', async () => {
+      mockRequest.mockRejectedValue(buildAxiosError({ status: 500 } as AxiosResponse));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getCharactersRanking(2, 'skill_points')).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'An error occurred, please try again later.',
+        status: 500,
+      });
+    });
+
+    it('falls back to a generic message and status 0 when the AxiosError has no response at all', async () => {
+      mockRequest.mockRejectedValue(buildAxiosError(undefined));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getCharactersRanking(2, 'skill_points')).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'An error occurred, please try again later.',
+        status: 0,
+      });
+    });
+
+    it('rethrows non-Axios errors unchanged', async () => {
+      mockRequest.mockRejectedValue(new Error('unexpected failure'));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getCharactersRanking(2, 'skill_points')).rejects.toThrow(
+        'unexpected failure',
+      );
+      await expect(client.getCharactersRanking(2, 'skill_points')).rejects.not.toBeInstanceOf(
+        ApiError,
+      );
+    });
+  });
 });
 
 describe('apiClient', () => {
