@@ -1,4 +1,4 @@
-export const getWorldIdByServer = (server: string) => {
+export const getWorldIdByServer = (server: string): number => {
   switch (server.toLowerCase()) {
     case 'us':
       return 2;
@@ -15,7 +15,7 @@ export const getWorldIdByServer = (server: string) => {
   throw new Error('Invalid server.');
 };
 
-export const getServerByWorldId = (worldId: number) => {
+export const getServerByWorldId = (worldId: number): string => {
   switch (worldId) {
     case 2:
       return 'USPC/PS';
@@ -31,3 +31,9 @@ export const getServerByWorldId = (worldId: number) => {
 
   throw new Error('Invalid world ID.');
 };
+
+export const getOptionalWorldIdByServer = (server: string): number =>
+  server.toLowerCase() === 'all' ? 0 : getWorldIdByServer(server);
+
+export const getServerByOptionalWorldId = (worldId: number): string =>
+  worldId === 0 ? 'All Servers' : getServerByWorldId(worldId);
