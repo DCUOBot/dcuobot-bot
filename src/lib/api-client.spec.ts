@@ -261,6 +261,88 @@ describe('ApiClient', () => {
       );
     });
   });
+
+  describe('getGuildsRanking', () => {
+    it('requests /guilds with worldId, sort and a descending sortDirection as params', async () => {
+      const guilds = [{ guild_id: '1', name: 'Justice League' }];
+      mockRequest.mockResolvedValue({ data: guilds });
+
+      const client = new ApiClient('https://mocked.example/api');
+      const result = await client.getGuildsRanking(2, 'averageCombatRating');
+
+      expect(mockRequest).toHaveBeenCalledWith({
+        url: '/guilds',
+        params: { worldId: 2, sort: 'averageCombatRating', sortDirection: 'DESC' },
+      });
+      expect(result).toBe(guilds);
+    });
+
+    it('omits worldId from the params when ranking across all servers (worldId 0)', async () => {
+      mockRequest.mockResolvedValue({ data: [] });
+
+      const client = new ApiClient('https://mocked.example/api');
+      await client.getGuildsRanking(0, 'averageCombatRating');
+
+      expect(mockRequest).toHaveBeenCalledWith({
+        url: '/guilds',
+        params: { sort: 'averageCombatRating', sortDirection: 'DESC' },
+      });
+    });
+
+    it('wraps an AxiosError with a response into an ApiError using the response status and message', async () => {
+      mockRequest.mockRejectedValue(
+        buildAxiosError({
+          status: 500,
+          data: { message: 'Ranking unavailable.' },
+        } as AxiosResponse),
+      );
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGuildsRanking(2, 'averageCombatRating')).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'Ranking unavailable.',
+        status: 500,
+      });
+    });
+
+    it('falls back to a generic message when the error response has no body', async () => {
+      mockRequest.mockRejectedValue(buildAxiosError({ status: 500 } as AxiosResponse));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGuildsRanking(2, 'averageCombatRating')).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'An error occurred, please try again later.',
+        status: 500,
+      });
+    });
+
+    it('falls back to a generic message and status 0 when the AxiosError has no response at all', async () => {
+      mockRequest.mockRejectedValue(buildAxiosError(undefined));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGuildsRanking(2, 'averageCombatRating')).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'An error occurred, please try again later.',
+        status: 0,
+      });
+    });
+
+    it('rethrows non-Axios errors unchanged', async () => {
+      mockRequest.mockRejectedValue(new Error('unexpected failure'));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGuildsRanking(2, 'averageCombatRating')).rejects.toThrow(
+        'unexpected failure',
+      );
+      await expect(client.getGuildsRanking(2, 'averageCombatRating')).rejects.not.toBeInstanceOf(
+        ApiError,
+      );
+    });
+  });
 });
 
 describe('apiClient', () => {

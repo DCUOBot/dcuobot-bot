@@ -1,4 +1,5 @@
 import type { Character } from '../models/characters/character';
+import type { Guild } from '../models/guilds/guild';
 
 export const getApiSortByBotSort = (sort: string): string => {
   switch (sort.toLowerCase()) {
@@ -12,6 +13,14 @@ export const getApiSortByBotSort = (sort: string): string => {
       return 'max_health';
     case 'power':
       return 'max_power';
+    case 'avgsp':
+      return 'averageSkillPoints';
+    case 'avgcr':
+      return 'averageCombatRating';
+    case 'avgpvpcr':
+      return 'averagePvpCombatRating';
+    case 'members':
+      return 'memberCount';
   }
 
   return sort.toLowerCase();
@@ -20,9 +29,12 @@ export const getApiSortByBotSort = (sort: string): string => {
 export const getSortEmoji = (sort: string): string => {
   switch (sort.toLowerCase()) {
     case 'sp':
+    case 'avgsp':
       return ':chart_with_upwards_trend:';
     case 'cr':
+    case 'avgcr':
       return ':dagger:';
+    case 'avgpvpcr':
     case 'pvpcr':
       return ':crossed_swords:';
     case 'health':
@@ -43,6 +55,8 @@ export const getSortEmoji = (sort: string): string => {
       return ':pill:';
     case 'dominance':
       return ':chains:';
+    case 'members':
+      return ':1234:';
   }
 
   throw new Error('Invalid sort.');
@@ -74,6 +88,14 @@ export const getSortLabel = (sort: string): string => {
       return 'Vitalization';
     case 'dominance':
       return 'Dominance';
+    case 'avgsp':
+      return 'Avg. Skill Points';
+    case 'avgcr':
+      return 'Avg. Combat Rating';
+    case 'avgpvpcr':
+      return 'Avg. PvP Combat Rating';
+    case 'members':
+      return 'Members';
   }
 
   throw new Error('Invalid sort.');
@@ -105,6 +127,21 @@ export const getCharacterStatBySort = (sort: string, character: Character): numb
       return character.stats.vitalization;
     case 'dominance':
       return character.stats.dominance;
+  }
+
+  throw new Error('Invalid sort.');
+};
+
+export const getGuildStatBySort = (sort: string, guild: Guild): number => {
+  switch (sort.toLowerCase()) {
+    case 'avgsp':
+      return guild.average_skill_points;
+    case 'avgcr':
+      return guild.average_combat_rating;
+    case 'avgpvpcr':
+      return guild.average_pvp_combat_rating;
+    case 'members':
+      return guild.member_count;
   }
 
   throw new Error('Invalid sort.');

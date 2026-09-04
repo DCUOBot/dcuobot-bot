@@ -65,6 +65,16 @@ export class ApiClient {
       },
     });
   }
+
+  async getGuildsRanking(worldId: number, sort: string): Promise<Guild[]> {
+    return this.request<Guild[]>('/guilds', {
+      params: {
+        ...(worldId !== 0 && { worldId }),
+        sort,
+        sortDirection: 'DESC',
+      },
+    });
+  }
 }
 
 export const apiClient = new ApiClient();
