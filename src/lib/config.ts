@@ -22,6 +22,12 @@ export const config = {
       author: 'DCUOBot',
       image: 'https://avatars.githubusercontent.com/u/211105057',
     },
+    emojis: {
+      tank: '<:r_:1088024461778890772>',
+      healer: '<:r_:1088024463070744698>',
+      controller: '<:r_:1088024465008500788>',
+      dps: '<:r_:1088024466291949599>',
+    },
   },
   api: {
     baseUrl: 'https://dcuo.bot/api/v1/census',
