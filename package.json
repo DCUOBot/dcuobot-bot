@@ -1,6 +1,6 @@
 {
   "name": "dcuobot-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "DCUOBot NodeJS Discord bot",
   "engines": {
     "node": ">=24"
