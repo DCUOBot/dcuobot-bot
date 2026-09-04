@@ -1,7 +1,12 @@
 import type { Command } from '../types/command';
 import { type ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { buildLfgActionRow, buildLfgEmbed } from '../helpers/lfg-embed-helpers';
-import { config } from '../lib/config';
+import {
+  buildLfgActionRow,
+  buildLfgEmbed,
+  EMPTY_SLOT,
+  type LfgRole,
+} from '../helpers/lfg-embed-helpers';
+import { LFG_ROLES } from '../helpers/lfg-roles';
 
 const MIN_GROUP_SIZE = 4;
 const MAX_GROUP_SIZE = 8;
@@ -35,45 +40,19 @@ const command: Command = {
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
     const instanceName = interaction.options.getString('instance_name', true);
 
-    const roles = [
-      {
-        key: 'tank',
-        label: 'Tank',
-        pluralLabel: 'tanks',
-        emoji: config.discord.emojis.tank,
-        amount: interaction.options.getInteger('amount_of_tanks', true),
-      },
-      {
-        key: 'healer',
-        label: 'Healer',
-        pluralLabel: 'healers',
-        emoji: config.discord.emojis.healer,
-        amount: interaction.options.getInteger('amount_of_healers', true),
-      },
-      {
-        key: 'controller',
-        label: 'Controller',
-        pluralLabel: 'controllers',
-        emoji: config.discord.emojis.controller,
-        amount: interaction.options.getInteger('amount_of_controllers', true),
-      },
-      {
-        key: 'dps',
-        label: 'DPS',
-        pluralLabel: 'DPS',
-        emoji: config.discord.emojis.dps,
-        amount: interaction.options.getInteger('amount_of_dps', true),
-      },
-    ];
+    const amounts = LFG_ROLES.map((role) => ({
+      ...role,
+      amount: interaction.options.getInteger(role.optionName, true),
+    }));
 
-    const invalidRole = roles.find((role) => role.amount < 0);
+    const invalidRole = amounts.find((role) => role.amount < 0);
 
     if (invalidRole) {
       await interaction.reply(`Amount of ${invalidRole.pluralLabel} cannot be less than 0.`);
       return;
     }
 
-    const groupSize = roles.reduce((total, role) => total + role.amount, 0);
+    const groupSize = amounts.reduce((total, role) => total + role.amount, 0);
 
     if (groupSize < MIN_GROUP_SIZE || groupSize > MAX_GROUP_SIZE) {
       await interaction.reply(
@@ -81,6 +60,14 @@ const command: Command = {
       );
       return;
     }
+
+    const roles: LfgRole[] = amounts.map((role) => ({
+      key: role.key,
+      label: role.label,
+      emoji: role.emoji,
+      maxAmount: role.amount,
+      slots: [EMPTY_SLOT],
+    }));
 
     const embed = buildLfgEmbed(instanceName, interaction.user.username, roles);
     const row = buildLfgActionRow(interaction.id, roles);

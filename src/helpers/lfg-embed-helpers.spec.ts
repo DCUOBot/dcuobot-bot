@@ -19,7 +19,8 @@ const buildRole = (overrides: Partial<LfgRole> = {}): LfgRole => ({
   key: 'tank',
   label: 'Tank',
   emoji: '<:r_:1088024461778890772>',
-  amount: 1,
+  maxAmount: 1,
+  slots: ['-'],
   ...overrides,
 });
 
@@ -46,17 +47,30 @@ describe('buildLfgEmbed', () => {
   });
 
   it('renders a field per role with the emoji, label, an empty slot count, and a "-" value', () => {
-    const role = buildRole({ emoji: ':shield:', label: 'Tank', amount: 2 });
+    const role = buildRole({ emoji: ':shield:', label: 'Tank', maxAmount: 2, slots: ['-'] });
     const fields = buildLfgEmbed('Instance', 'Batman', [role]).toJSON().fields ?? [];
 
     expect(fields[0]?.name).toBe(':shield: Tank (0/2)');
     expect(fields[0]?.value).toBe('-');
   });
 
+  it('counts filled slots and lists them, one per line, in the field value', () => {
+    const role = buildRole({
+      emoji: ':shield:',
+      label: 'Tank',
+      maxAmount: 3,
+      slots: ['Batman', 'Robin'],
+    });
+    const fields = buildLfgEmbed('Instance', 'Batman', [role]).toJSON().fields ?? [];
+
+    expect(fields[0]?.name).toBe(':shield: Tank (2/3)');
+    expect(fields[0]?.value).toBe('Batman\nRobin');
+  });
+
   it('renders one field per role, in order', () => {
     const roles = [
-      buildRole({ emoji: ':shield:', label: 'Tank', amount: 1 }),
-      buildRole({ emoji: ':medkit:', label: 'Healer', amount: 2 }),
+      buildRole({ emoji: ':shield:', label: 'Tank', maxAmount: 1, slots: ['-'] }),
+      buildRole({ emoji: ':medkit:', label: 'Healer', maxAmount: 2, slots: ['-'] }),
     ];
     const fields = buildLfgEmbed('Instance', 'Batman', roles).toJSON().fields ?? [];
 

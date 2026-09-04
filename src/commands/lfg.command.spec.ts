@@ -21,6 +21,7 @@ vi.mock('../lib/config', () => ({
 vi.mock('../helpers/lfg-embed-helpers', () => ({
   buildLfgEmbed: vi.fn(),
   buildLfgActionRow: vi.fn(),
+  EMPTY_SLOT: '-',
 }));
 
 const mockEmbed = { sentinel: 'embed' } as unknown as EmbedBuilder;
@@ -65,22 +66,22 @@ const createInteraction = (options: {
 const expectedRoles = (
   overrides: Partial<Record<'tanks' | 'healers' | 'controllers' | 'dps', number>>,
 ) => [
-  { key: 'tank', label: 'Tank', pluralLabel: 'tanks', emoji: EMOJIS.tank, amount: overrides.tanks },
+  { key: 'tank', label: 'Tank', emoji: EMOJIS.tank, maxAmount: overrides.tanks, slots: ['-'] },
   {
     key: 'healer',
     label: 'Healer',
-    pluralLabel: 'healers',
     emoji: EMOJIS.healer,
-    amount: overrides.healers,
+    maxAmount: overrides.healers,
+    slots: ['-'],
   },
   {
     key: 'controller',
     label: 'Controller',
-    pluralLabel: 'controllers',
     emoji: EMOJIS.controller,
-    amount: overrides.controllers,
+    maxAmount: overrides.controllers,
+    slots: ['-'],
   },
-  { key: 'dps', label: 'DPS', pluralLabel: 'DPS', emoji: EMOJIS.dps, amount: overrides.dps },
+  { key: 'dps', label: 'DPS', emoji: EMOJIS.dps, maxAmount: overrides.dps, slots: ['-'] },
 ];
 
 describe('lfg command', () => {

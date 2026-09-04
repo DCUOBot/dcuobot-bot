@@ -1,12 +1,31 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type EmbedBuilder } from 'discord.js';
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  type APIEmbedField,
+  type EmbedBuilder,
+} from 'discord.js';
 import { buildEmbed } from './embed-helpers';
+
+export const EMPTY_SLOT = '-';
 
 export interface LfgRole {
   key: string;
   label: string;
   emoji: string;
-  amount: number;
+  maxAmount: number;
+  slots: string[];
 }
+
+export const countFilledSlots = (slots: string[]): number =>
+  slots.filter((slot) => slot !== EMPTY_SLOT).length;
+
+export const buildLfgRoleFields = (roles: LfgRole[]): APIEmbedField[] =>
+  roles.map((role) => ({
+    name: `${role.emoji} ${role.label} (${countFilledSlots(role.slots)}/${role.maxAmount})`,
+    value: role.slots.join('\n'),
+    inline: false,
+  }));
 
 export const buildLfgEmbed = (
   instanceName: string,
@@ -16,13 +35,7 @@ export const buildLfgEmbed = (
   buildEmbed()
     .setTitle(`:mag: LFG ${instanceName}`)
     .setDescription(`Created by \`${createdBy}\`.`)
-    .addFields(
-      ...roles.map((role) => ({
-        name: `${role.emoji} ${role.label} (0/${role.amount})`,
-        value: '-',
-        inline: false,
-      })),
-    );
+    .addFields(...buildLfgRoleFields(roles));
 
 export const buildLfgActionRow = (
   interactionId: string,
