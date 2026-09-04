@@ -125,6 +125,72 @@ describe('ApiClient', () => {
       await expect(client.getCharacter('Batman', 2)).rejects.not.toBeInstanceOf(ApiError);
     });
   });
+
+  describe('getGuild', () => {
+    it('requests /guilds with the name and worldId as params, and returns the response data', async () => {
+      const guild = { guild_id: '1', name: 'Justice League' };
+      mockRequest.mockResolvedValue({ data: guild });
+
+      const client = new ApiClient('https://mocked.example/api');
+      const result = await client.getGuild('Justice League', 2);
+
+      expect(mockRequest).toHaveBeenCalledWith({
+        url: '/guilds',
+        params: { name: 'Justice League', worldId: 2 },
+      });
+      expect(result).toBe(guild);
+    });
+
+    it('wraps an AxiosError with a response into an ApiError using the response status and message', async () => {
+      mockRequest.mockRejectedValue(
+        buildAxiosError({
+          status: 404,
+          data: { message: 'League not found.' },
+        } as AxiosResponse),
+      );
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGuild('Justice League', 2)).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'League not found.',
+        status: 404,
+      });
+    });
+
+    it('falls back to a generic message when the error response has no body', async () => {
+      mockRequest.mockRejectedValue(buildAxiosError({ status: 500 } as AxiosResponse));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGuild('Justice League', 2)).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'An error occurred, please try again later.',
+        status: 500,
+      });
+    });
+
+    it('falls back to a generic message and status 0 when the AxiosError has no response at all', async () => {
+      mockRequest.mockRejectedValue(buildAxiosError(undefined));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGuild('Justice League', 2)).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'An error occurred, please try again later.',
+        status: 0,
+      });
+    });
+
+    it('rethrows non-Axios errors unchanged', async () => {
+      mockRequest.mockRejectedValue(new Error('unexpected failure'));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGuild('Justice League', 2)).rejects.toThrow('unexpected failure');
+      await expect(client.getGuild('Justice League', 2)).rejects.not.toBeInstanceOf(ApiError);
+    });
+  });
 });
 
 describe('apiClient', () => {

@@ -1,6 +1,7 @@
 import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios';
 import { config } from './config';
 import type { Character } from '../models/characters/character';
+import type { Guild } from '../models/guilds/guild';
 
 interface ApiErrorResponseBody {
   message?: string;
@@ -40,6 +41,15 @@ export class ApiClient {
 
   async getCharacter(name: string, worldId: number): Promise<Character> {
     return this.request<Character>('/characters', {
+      params: {
+        name,
+        worldId,
+      },
+    });
+  }
+
+  async getGuild(name: string, worldId: number): Promise<Guild> {
+    return this.request<Guild>('/guilds', {
       params: {
         name,
         worldId,

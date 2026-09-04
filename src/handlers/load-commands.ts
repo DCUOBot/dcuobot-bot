@@ -19,7 +19,13 @@ function isCommand(value: unknown): value is Command {
 
 export async function loadCommands(commandsDir: string = defaultCommandsDir): Promise<Command[]> {
   const files = (await readdir(commandsDir)).filter(
-    (file) => (file.endsWith('.ts') || file.endsWith('.js')) && !file.endsWith('.d.ts'),
+    (file) =>
+      (file.endsWith('.ts') || file.endsWith('.js')) &&
+      !file.endsWith('.d.ts') &&
+      !file.endsWith('.spec.ts') &&
+      !file.endsWith('.spec.js') &&
+      !file.endsWith('.test.ts') &&
+      !file.endsWith('.test.js'),
   );
 
   const commands: Command[] = [];
