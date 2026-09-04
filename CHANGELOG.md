@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/DCUOBot/dcuobot-bot/compare/dcuobot-bot-v1.0.0...dcuobot-bot-v1.0.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* update Dockerfile to ignore npm scripts during install ([#33](https://github.com/DCUOBot/dcuobot-bot/issues/33)) ([3e7c74d](https://github.com/DCUOBot/dcuobot-bot/commit/3e7c74d57e9173425cef9a965066adbc810e89bf))
+
 ## 1.0.0 (2026-09-04)
 
 
