@@ -1,6 +1,10 @@
 import type { Client } from 'discord.js';
 import { describe, expect, it, vi } from 'vitest';
-import { buildCharacterEmbed, buildCharacterUrl } from './character-embed-helpers';
+import {
+  buildCharacterEmbed,
+  buildCharacterUrl,
+  buildStatisticsEmbed,
+} from './character-embed-helpers';
 import type { Ally } from '../models/characters/ally';
 import type { Artifact } from '../models/characters/artifact';
 import type { Character } from '../models/characters/character';
@@ -224,5 +228,59 @@ describe('buildCharacterEmbed', () => {
     expect(findField(fields, ':superhero: Combat Ally').value).toBe('Combat Ally');
     expect(findField(fields, ':superhero: Support Ally One').value).toBe('Support A');
     expect(findField(fields, ':superhero: Support Ally Two').value).toBe('Support B');
+  });
+});
+
+describe('buildStatisticsEmbed', () => {
+  it('sets title, url, description and thumbnail from the character', () => {
+    const character = buildCharacter({ name: 'Batman', world_id: '2', power_type: 'Gadgets' });
+    const embed = buildStatisticsEmbed(character).toJSON();
+
+    expect(embed.title).toBe(':bar_chart: Stats of Batman');
+    expect(embed.url).toBe(buildCharacterUrl(character));
+    expect(embed.description).toBe('Server: USPC/PS • Power: Gadgets');
+    expect(embed.thumbnail?.url).toBe('https://example.com/batman.png');
+  });
+
+  it('applies the shared embed styling (color, author, timestamp)', () => {
+    const embed = buildStatisticsEmbed(buildCharacter()).toJSON();
+
+    expect(embed.color).toBe(Number.parseInt('9B59B6', 16));
+    expect(embed.author).toEqual({ name: 'DCUOBot', icon_url: 'https://example.com/icon.png' });
+    expect(embed.timestamp).toBeTruthy();
+  });
+
+  it('propagates an error for an unrecognized world ID', () => {
+    const character = buildCharacter({ world_id: '9999' });
+
+    expect(() => buildStatisticsEmbed(character)).toThrow('Invalid world ID.');
+  });
+
+  it('renders every stat field, formatted with toLocaleString', () => {
+    const character = buildCharacter({
+      stats: {
+        health: 12345,
+        power: 234,
+        might: 45,
+        precision: 6,
+        defense: 789,
+        dominance: 10,
+        toughness: 1111,
+        restoration: 22,
+        vitalization: 333,
+      },
+    });
+    const fields = buildStatisticsEmbed(character).toJSON().fields ?? [];
+    const zwsp = (value: number) => String.fromCharCode(0x200b) + value.toLocaleString();
+
+    expect(findField(fields, ':heart: Health').value).toBe(zwsp(12345));
+    expect(findField(fields, ':zap: Power').value).toBe(zwsp(234));
+    expect(findField(fields, ':magic_wand: Might').value).toBe(zwsp(45));
+    expect(findField(fields, ':dart: Precision').value).toBe(zwsp(6));
+    expect(findField(fields, ':shield: Defense').value).toBe(zwsp(789));
+    expect(findField(fields, ':chains: Dominance').value).toBe(zwsp(10));
+    expect(findField(fields, ':muscle: Toughness').value).toBe(zwsp(1111));
+    expect(findField(fields, ':herb: Restoration').value).toBe(zwsp(22));
+    expect(findField(fields, ':pill: Vitalization').value).toBe(zwsp(333));
   });
 });

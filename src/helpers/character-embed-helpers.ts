@@ -87,3 +87,60 @@ export const buildCharacterEmbed = (client: Client, character: Character): Embed
       },
     );
 };
+
+export const buildStatisticsEmbed = (character: Character): EmbedBuilder => {
+  return buildEmbed()
+    .setTitle(`:bar_chart: Stats of ${character.name}`)
+    .setURL(buildCharacterUrl(character))
+    .setDescription(
+      `Server: ${getServerByWorldId(+character.world_id)} • ` + `Power: ${character.power_type}`,
+    )
+    .setThumbnail(character.image.url)
+    .addFields(
+      {
+        name: ':heart: Health',
+        value: ZWSP + character.stats.health.toLocaleString(),
+        inline: true,
+      },
+      {
+        name: ':zap: Power',
+        value: ZWSP + character.stats.power.toLocaleString(),
+        inline: true,
+      },
+      {
+        name: ':shield: Defense',
+        value: ZWSP + character.stats.defense.toLocaleString(),
+        inline: true,
+      },
+      {
+        name: ':muscle: Toughness',
+        value: ZWSP + character.stats.toughness.toLocaleString(),
+        inline: true,
+      },
+      {
+        name: ':magic_wand: Might',
+        value: ZWSP + character.stats.might.toLocaleString(),
+        inline: true,
+      },
+      {
+        name: ':dart: Precision',
+        value: ZWSP + character.stats.precision.toLocaleString(),
+        inline: true,
+      },
+      {
+        name: ':herb: Restoration',
+        value: ZWSP + character.stats.restoration.toLocaleString(),
+        inline: true,
+      },
+      {
+        name: ':pill: Vitalization',
+        value: ZWSP + character.stats.vitalization.toLocaleString(),
+        inline: true,
+      },
+      {
+        name: ':chains: Dominance',
+        value: ZWSP + character.stats.dominance.toLocaleString(),
+        inline: true,
+      },
+    );
+};
