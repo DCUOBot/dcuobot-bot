@@ -1,42 +1,14 @@
-import type { Command } from '../types/command';
-import { type ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { apiClient, ApiError } from '../lib/api-client';
-import { getWorldIdByServer } from '../helpers/world-id-helpers';
+import { apiClient } from '../lib/api-client';
 import { buildGuildEmbed } from '../helpers/guild-embed-helpers';
+import { buildLookupCommand } from '../handlers/build-lookup-command';
 
-const command: Command = {
-  data: new SlashCommandBuilder()
-    .setName('league')
-    .setDescription('Look up a leagues average skill points, members, etc.')
-    .addStringOption((option) =>
-      option.setName('name').setDescription('The name of the league to look up.').setRequired(true),
-    )
-    .addStringOption((option) =>
-      option.setName('server').setDescription('The server the league is on.').setRequired(true),
-    ),
-
-  async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const name = interaction.options.getString('name', true);
-    const server = interaction.options.getString('server', true);
-
-    try {
-      await interaction.deferReply();
-
-      const guild = await apiClient.getGuild(name, getWorldIdByServer(server));
-      const embed = buildGuildEmbed(guild);
-
-      await interaction.editReply({
-        embeds: [embed],
-      });
-    } catch (error) {
-      if (error instanceof ApiError) {
-        await interaction.editReply(error.message);
-        return;
-      }
-
-      throw error;
-    }
-  },
-};
+const command = buildLookupCommand({
+  name: 'league',
+  description: 'Look up a leagues average skill points, members, etc.',
+  nameOptionDescription: 'The name of the league to look up.',
+  serverOptionDescription: 'The server the league is on.',
+  fetch: (name, worldId) => apiClient.getGuild(name, worldId),
+  buildEmbed: (_interaction, guild) => buildGuildEmbed(guild),
+});
 
 export default command;

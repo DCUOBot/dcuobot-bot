@@ -104,7 +104,7 @@ describe('statistics command', () => {
     expect(interaction.deferReply).toHaveBeenCalledOnce();
     expect(apiClient.getCharacter).toHaveBeenCalledWith('Batman', 2);
     expect(buildStatisticsEmbed).toHaveBeenCalledWith(character);
-    expect(interaction.editReply).toHaveBeenCalledWith({ embeds: [mockEmbed] });
+    expect(interaction.editReply).toHaveBeenCalledWith({ content: null, embeds: [mockEmbed] });
   });
 
   it('resolves the server option to the matching world ID', async () => {
