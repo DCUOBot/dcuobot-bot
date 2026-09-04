@@ -1,5 +1,12 @@
-import { Events, GatewayIntentBits, MessageFlags } from 'discord.js';
+import {
+  Events,
+  GatewayIntentBits,
+  MessageFlags,
+  type ButtonInteraction,
+  type ChatInputCommandInteraction,
+} from 'discord.js';
 import { loadCommands } from './handlers/load-commands';
+import { loadButtons } from './handlers/load-buttons';
 import { config } from './lib/config';
 import { logger } from './lib/logger';
 import { BotClient } from './structures/bot-client';
@@ -20,39 +27,66 @@ for (const command of await loadCommands()) {
 
 logger.info({ count: client.commands.size }, 'Loaded commands');
 
+for (const button of await loadButtons()) {
+  client.buttons.set(button.customId, button);
+}
+
+logger.info({ count: client.buttons.size }, 'Loaded buttons');
+
 client.once(Events.ClientReady, (readyClient) => {
   logger.info({ tag: readyClient.user.tag }, 'Bot is ready');
 });
 
-client.on(Events.InteractionCreate, (interaction) => {
-  if (!interaction.isChatInputCommand()) {
-    return;
-  }
+function respondWithError(interaction: ChatInputCommandInteraction | ButtonInteraction): void {
+  const errorResponse = {
+    content: 'There was an error while executing this command.',
+    flags: MessageFlags.Ephemeral,
+  } as const;
 
-  const command = client.commands.get(interaction.commandName);
+  const respond =
+    interaction.replied || interaction.deferred
+      ? interaction.followUp(errorResponse)
+      : interaction.reply(errorResponse);
 
-  if (!command) {
-    logger.warn({ commandName: interaction.commandName }, 'Unknown command received');
-    return;
-  }
-
-  command.execute(interaction).catch((error: unknown) => {
-    logger.error({ err: error, commandName: interaction.commandName }, 'Command execution failed');
-
-    const errorResponse = {
-      content: 'There was an error while executing this command.',
-      flags: MessageFlags.Ephemeral,
-    } as const;
-
-    const respond =
-      interaction.replied || interaction.deferred
-        ? interaction.followUp(errorResponse)
-        : interaction.reply(errorResponse);
-
-    respond.catch((followUpError: unknown) => {
-      logger.error({ err: followUpError }, 'Failed to send error response');
-    });
+  respond.catch((followUpError: unknown) => {
+    logger.error({ err: followUpError }, 'Failed to send error response');
   });
+}
+
+client.on(Events.InteractionCreate, (interaction) => {
+  if (interaction.isChatInputCommand()) {
+    const command = client.commands.get(interaction.commandName);
+
+    if (!command) {
+      logger.warn({ commandName: interaction.commandName }, 'Unknown command received');
+      return;
+    }
+
+    command.execute(interaction).catch((error: unknown) => {
+      logger.error(
+        { err: error, commandName: interaction.commandName },
+        'Command execution failed',
+      );
+      respondWithError(interaction);
+    });
+
+    return;
+  }
+
+  if (interaction.isButton()) {
+    const customId = interaction.customId.split('-')[0] ?? interaction.customId;
+    const button = client.buttons.get(customId);
+
+    if (!button) {
+      logger.warn({ customId: interaction.customId }, 'Unknown button interaction received');
+      return;
+    }
+
+    button.execute(interaction).catch((error: unknown) => {
+      logger.error({ err: error, customId: interaction.customId }, 'Button execution failed');
+      respondWithError(interaction);
+    });
+  }
 });
 
 await client.login(config.discord.botToken);
