@@ -343,6 +343,69 @@ describe('ApiClient', () => {
       );
     });
   });
+
+  describe('getGameServerStatus', () => {
+    it('requests /status/game-servers with no params, and returns the response data', async () => {
+      const gameServers = [{ server_name: 'US', status: 'Online', population: 'medium' }];
+      mockRequest.mockResolvedValue({ data: gameServers });
+
+      const client = new ApiClient('https://mocked.example/api');
+      const result = await client.getGameServerStatus();
+
+      expect(mockRequest).toHaveBeenCalledWith({ url: '/status/game-servers' });
+      expect(result).toBe(gameServers);
+    });
+
+    it('wraps an AxiosError with a response into an ApiError using the response status and message', async () => {
+      mockRequest.mockRejectedValue(
+        buildAxiosError({
+          status: 500,
+          data: { message: 'Servers unavailable.' },
+        } as AxiosResponse),
+      );
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGameServerStatus()).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'Servers unavailable.',
+        status: 500,
+      });
+    });
+
+    it('falls back to a generic message when the error response has no body', async () => {
+      mockRequest.mockRejectedValue(buildAxiosError({ status: 500 } as AxiosResponse));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGameServerStatus()).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'An error occurred, please try again later.',
+        status: 500,
+      });
+    });
+
+    it('falls back to a generic message and status 0 when the AxiosError has no response at all', async () => {
+      mockRequest.mockRejectedValue(buildAxiosError(undefined));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGameServerStatus()).rejects.toMatchObject({
+        name: 'ApiError',
+        message: 'An error occurred, please try again later.',
+        status: 0,
+      });
+    });
+
+    it('rethrows non-Axios errors unchanged', async () => {
+      mockRequest.mockRejectedValue(new Error('unexpected failure'));
+
+      const client = new ApiClient('https://mocked.example/api');
+
+      await expect(client.getGameServerStatus()).rejects.toThrow('unexpected failure');
+      await expect(client.getGameServerStatus()).rejects.not.toBeInstanceOf(ApiError);
+    });
+  });
 });
 
 describe('apiClient', () => {
