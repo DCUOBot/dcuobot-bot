@@ -1,7 +1,7 @@
 import type { EmbedBuilder } from 'discord.js';
-import type { Character } from '../models/characters/character';
+import type { Character } from '../../models/characters/character';
 import { buildRankingEmbed, buildRankingUrl } from './ranking-embed-helpers';
-import { getCharacterStatBySort } from './sort-helpers';
+import { getCharacterStatBySort } from '../sort-helpers';
 
 const TOP_CHARACTERS_URL_PATH = '/characters/ranking';
 

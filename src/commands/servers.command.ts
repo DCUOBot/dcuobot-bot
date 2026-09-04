@@ -1,7 +1,7 @@
 import type { Command } from '../types/command';
 import { type ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { apiClient, ApiError } from '../lib/api-client';
-import { buildServersEmbed } from '../helpers/servers-embed-helpers';
+import { buildServersEmbed } from '../helpers/servers/servers-embed-helpers';
 
 const command: Command = {
   data: new SlashCommandBuilder()

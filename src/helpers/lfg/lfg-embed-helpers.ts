@@ -5,7 +5,7 @@ import {
   type APIEmbedField,
   type EmbedBuilder,
 } from 'discord.js';
-import { buildEmbed } from './embed-helpers';
+import { buildEmbed } from '../embed-helpers';
 
 export const EMPTY_SLOT = '-';
 

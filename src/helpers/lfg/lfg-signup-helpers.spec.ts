@@ -3,7 +3,7 @@ import type { ButtonInteraction } from 'discord.js';
 import { handleLfgSignup } from './lfg-signup-helpers';
 import { LFG_ROLES } from './lfg-roles';
 
-vi.mock('../lib/config', () => ({
+vi.mock('../../lib/config', () => ({
   config: {
     discord: {
       embed: {

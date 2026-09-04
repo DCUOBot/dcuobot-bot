@@ -1,5 +1,5 @@
 import { apiClient } from '../lib/api-client';
-import { buildTopLeaguesEmbed } from '../helpers/top-leagues-embed-helpers';
+import { buildTopLeaguesEmbed } from '../helpers/ranking/top-leagues-embed-helpers';
 import { buildRankingCommand } from '../handlers/build-ranking-command';
 
 const command = buildRankingCommand({

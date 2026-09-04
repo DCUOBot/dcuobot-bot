@@ -1,5 +1,5 @@
 import type { EmbedBuilder } from 'discord.js';
-import { buildEmbed } from './embed-helpers';
+import { buildEmbed } from '../embed-helpers';
 import type { SystemInfo } from './system-info-helpers';
 
 const formatDiscordPing = (discordPingMs: number): string =>

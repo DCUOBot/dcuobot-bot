@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import command from './top-leagues.command';
 import { apiClient, ApiError } from '../lib/api-client';
-import { buildTopLeaguesEmbed } from '../helpers/top-leagues-embed-helpers';
+import { buildTopLeaguesEmbed } from '../helpers/ranking/top-leagues-embed-helpers';
 import type { Guild } from '../models/guilds/guild';
 
 vi.mock('../lib/api-client', () => {
@@ -22,7 +22,7 @@ vi.mock('../lib/api-client', () => {
   };
 });
 
-vi.mock('../helpers/top-leagues-embed-helpers', () => ({
+vi.mock('../helpers/ranking/top-leagues-embed-helpers', () => ({
   buildTopLeaguesEmbed: vi.fn(),
 }));
 

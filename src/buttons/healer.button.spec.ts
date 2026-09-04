@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ButtonInteraction } from 'discord.js';
 import button from './healer.button';
-import { handleLfgSignup } from '../helpers/lfg-signup-helpers';
+import { handleLfgSignup } from '../helpers/lfg/lfg-signup-helpers';
 
-vi.mock('../helpers/lfg-signup-helpers', () => ({
+vi.mock('../helpers/lfg/lfg-signup-helpers', () => ({
   handleLfgSignup: vi.fn().mockResolvedValue(undefined),
 }));
 

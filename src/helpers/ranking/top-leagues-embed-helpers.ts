@@ -1,7 +1,7 @@
 import type { EmbedBuilder } from 'discord.js';
-import type { Guild } from '../models/guilds/guild';
+import type { Guild } from '../../models/guilds/guild';
 import { buildRankingEmbed, buildRankingUrl } from './ranking-embed-helpers';
-import { getGuildStatBySort } from './sort-helpers';
+import { getGuildStatBySort } from '../sort-helpers';
 
 const TOP_LEAGUES_URL_PATH = '/leagues/ranking';
 

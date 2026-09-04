@@ -1,8 +1,8 @@
 import type { EmbedBuilder } from 'discord.js';
-import type { Guild } from '../models/guilds/guild';
-import { buildEmbed } from './embed-helpers';
-import { config } from '../lib/config';
-import { getServerByWorldId } from './world-id-helpers';
+import type { Guild } from '../../models/guilds/guild';
+import { buildEmbed } from '../embed-helpers';
+import { config } from '../../lib/config';
+import { getServerByWorldId } from '../world-id-helpers';
 
 const ZWSP = '​';
 const MAX_DISPLAYED_MEMBERS = 10;

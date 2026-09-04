@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import command from './info.command';
-import { getSystemInfo } from '../helpers/system-info-helpers';
-import { buildInfoEmbed } from '../helpers/info-embed-helpers';
-import type { SystemInfo } from '../helpers/system-info-helpers';
+import { getSystemInfo } from '../helpers/info/system-info-helpers';
+import { buildInfoEmbed } from '../helpers/info/info-embed-helpers';
+import type { SystemInfo } from '../helpers/info/system-info-helpers';
 
-vi.mock('../helpers/system-info-helpers', () => ({
+vi.mock('../helpers/info/system-info-helpers', () => ({
   getSystemInfo: vi.fn(),
 }));
 
-vi.mock('../helpers/info-embed-helpers', () => ({
+vi.mock('../helpers/info/info-embed-helpers', () => ({
   buildInfoEmbed: vi.fn(),
 }));
 

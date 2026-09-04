@@ -5,11 +5,11 @@ import {
   buildCharacterUrl,
   buildStatisticsEmbed,
 } from './character-embed-helpers';
-import type { Ally } from '../models/characters/ally';
-import type { Artifact } from '../models/characters/artifact';
-import type { Character } from '../models/characters/character';
+import type { Ally } from '../../models/characters/ally';
+import type { Artifact } from '../../models/characters/artifact';
+import type { Character } from '../../models/characters/character';
 
-vi.mock('../lib/config', () => ({
+vi.mock('../../lib/config', () => ({
   config: {
     frontendUrl: 'https://dcuo.bot',
     discord: {

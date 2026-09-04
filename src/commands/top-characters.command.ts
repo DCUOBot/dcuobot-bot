@@ -1,5 +1,5 @@
 import { apiClient } from '../lib/api-client';
-import { buildTopCharactersEmbed } from '../helpers/top-characters-embed-helpers';
+import { buildTopCharactersEmbed } from '../helpers/ranking/top-characters-embed-helpers';
 import { buildRankingCommand } from '../handlers/build-ranking-command';
 
 const command = buildRankingCommand({

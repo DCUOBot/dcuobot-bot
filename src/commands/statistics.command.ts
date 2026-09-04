@@ -1,5 +1,5 @@
 import { apiClient } from '../lib/api-client';
-import { buildStatisticsEmbed } from '../helpers/character-embed-helpers';
+import { buildStatisticsEmbed } from '../helpers/character/character-embed-helpers';
 import { buildLookupCommand } from '../handlers/build-lookup-command';
 
 const command = buildLookupCommand({

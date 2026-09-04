@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import command from './top-characters.command';
 import { apiClient, ApiError } from '../lib/api-client';
-import { buildTopCharactersEmbed } from '../helpers/top-characters-embed-helpers';
+import { buildTopCharactersEmbed } from '../helpers/ranking/top-characters-embed-helpers';
 import type { Character } from '../models/characters/character';
 
 vi.mock('../lib/api-client', () => {
@@ -22,7 +22,7 @@ vi.mock('../lib/api-client', () => {
   };
 });
 
-vi.mock('../helpers/top-characters-embed-helpers', () => ({
+vi.mock('../helpers/ranking/top-characters-embed-helpers', () => ({
   buildTopCharactersEmbed: vi.fn(),
 }));
 

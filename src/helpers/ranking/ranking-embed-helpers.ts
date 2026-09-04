@@ -1,8 +1,8 @@
 import type { EmbedBuilder } from 'discord.js';
-import { buildEmbed } from './embed-helpers';
-import { config } from '../lib/config';
-import { getApiSortByBotSort, getSortEmoji, getSortLabel } from './sort-helpers';
-import { getServerByOptionalWorldId, getServerByWorldId } from './world-id-helpers';
+import { buildEmbed } from '../embed-helpers';
+import { config } from '../../lib/config';
+import { getApiSortByBotSort, getSortEmoji, getSortLabel } from '../sort-helpers';
+import { getServerByOptionalWorldId, getServerByWorldId } from '../world-id-helpers';
 
 const MAX_DISPLAYED_ITEMS = 10;
 

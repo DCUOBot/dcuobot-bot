@@ -1,9 +1,9 @@
 import type { Client, EmbedBuilder } from 'discord.js';
-import { buildEmbed } from './embed-helpers';
-import { getServerByWorldId } from './world-id-helpers';
-import { config } from '../lib/config';
-import type { Character } from '../models/characters/character';
-import type { Ally } from '../models/characters/ally';
+import { buildEmbed } from '../embed-helpers';
+import { getServerByWorldId } from '../world-id-helpers';
+import { config } from '../../lib/config';
+import type { Character } from '../../models/characters/character';
+import type { Ally } from '../../models/characters/ally';
 
 const ARTIFACT_ORDINALS = ['One', 'Two', 'Three', 'Four', 'Five'] as const;
 const ZWSP = '\u200B';

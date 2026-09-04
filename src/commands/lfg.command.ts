@@ -5,8 +5,8 @@ import {
   buildLfgEmbed,
   EMPTY_SLOT,
   type LfgRole,
-} from '../helpers/lfg-embed-helpers';
-import { LFG_ROLES } from '../helpers/lfg-roles';
+} from '../helpers/lfg/lfg-embed-helpers';
+import { LFG_ROLES } from '../helpers/lfg/lfg-roles';
 
 const MIN_GROUP_SIZE = 4;
 const MAX_GROUP_SIZE = 8;
